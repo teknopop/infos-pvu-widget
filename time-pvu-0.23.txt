@@ -1,0 +1,79 @@
+// ==UserScript==
+// @name         Time PVU
+// @namespace    http://tampermonkey.net/
+// @version      0.23
+// @description  try to take over the world!
+// @author       Fantomas
+// @match        https://marketplace.plantvsundead.com/*
+// @icon         https://www.google.com/s2/favicons?domain=plantvsundead.com
+// @require      https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js
+// @grant       GM_addStyle
+// ==/UserScript==
+
+GM_addStyle ('#btx {padding:5px; color:#fff; background-color: rgba(229, 142, 76, 0.7); width: 40px; height: 40px; border-radius: 15px;} .addInfo{font-size:12px; color:#fff; display:block;}');
+GM_addStyle ('#blocfts{position:fixed; bottom:20px; left:10px; z-index:9999;} .price{display:inline-block; vertical-align:bottom; color:#fff; font-weight:600; padding-left:15px; font-size:24px;}');
+GM_addStyle ('.infofts{display:none; border-radius:7px; padding: 5px;font-size: 14px;color: rgba(235, 153, 77, 1);font-weight: 600;background-color: rgba(255, 211, 134, 1);margin-top: 5px;}');
+GM_addStyle ('.fts .infofts{display:block;} .farm-info{display:block!important;}');
+GM_addStyle ('.boxfts {background-color: rgba(253, 194, 91,1); border-color: #4a1c25; box-shadow: 0 5px 0 rgb(0 0 0 / 20%), inset 0 -10px 0 #eb994d, inset 0 5px 0 #ffeeb0; border-width: 2px; border-radius: 1.5rem; padding:15px 10px 20px; width:100%; max-width:192px;}');
+GM_addStyle ('.pictofts{display: inline-block;width: 0.8rem;padding-right: 2px;position: relative;top:-1px;}');
+
+/*******A MODIFIER*********/
+var letopvu = 665; // +10% tous les vendredi à 2h
+/**************************/
+var price; var etat = false, etatElm = false;
+(function() {
+    'use strict';
+    $('body').append('<div id="blocfts" class="boxfts"><button id="btx"><img data-v-d92c5d6c="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNSIgaGVpZ2h0PSIxNSIgdmlld0JveD0iMCAwIDUgMTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0wLjYyMDAyNiAyLjMzODE4QzAuNjIwMDI2IDEuODg0MzYgMC43ODczNzUgMS41MTE5OSAxLjEyMjA3IDEuMjIxMDhDMS40NTY3NyAwLjkxODUzOCAxLjg5OTA1IDAuNzY3MjY1IDIuNDQ4OTIgMC43NjcyNjVDMi45OTg3OCAwLjc2NzI2NSAzLjQ0MTA2IDAuOTE4NTM4IDMuNzc1NzYgMS4yMjEwOEM0LjExMDQ2IDEuNTExOTkgNC4yNzc4MSAxLjg4NDM2IDQuMjc3ODEgMi4zMzgxOEM0LjI3NzgxIDIuNzgwMzYgNC4xMTA0NiAzLjE1MjcyIDMuNzc1NzYgMy40NTUyN0MzLjQ0MTA2IDMuNzQ2MTggMi45OTg3OCAzLjg5MTYzIDIuNDQ4OTIgMy44OTE2M0MxLjg5OTA1IDMuODkxNjMgMS40NTY3NyAzLjc0NjE4IDEuMTIyMDcgMy40NTUyN0MwLjc4NzM3NSAzLjE1MjcyIDAuNjIwMDI2IDIuNzgwMzYgMC42MjAwMjYgMi4zMzgxOFpNMy45NzI5OSA1LjA3ODU0VjE0LjgxODJIMC45MDY5MTFWNS4wNzg1NEgzLjk3Mjk5WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==" alt="" class="tw-w-6 tw-h-6 tw-m-auto"></button><div class="price"></div><div class="infofts"></div></div>');
+    var url = 'https://api.coingecko.com/api/v3/simple/price?ids=plant-vs-undead-token&vs_currencies=usd';
+    $.getJSON( url, function( data ) {
+        $.each( data, function( key, val ) {
+            if (key == "plant-vs-undead-token") {
+                price = val.usd;
+                $('.price').text(price+'$');
+            }
+        });
+    });
+})();
+
+$(window).load(function(){console.log("loaded")
+   var tabPlant = [], $h = 0;
+   $('#btx').click(function(){
+       if(!etat) {
+           if(!etatElm){ addElm(); etatElm = true; }
+           $('body').addClass('fts');
+           etat = true;
+       } else {
+           $('body').removeClass('fts');
+           etat = false;
+       }
+    });
+   function addElm(){
+     var sap = $('.sidebar .exchange-number').text();
+     var le = $('.wallet-text span').text();
+     console.log(le, sap)
+     $('div.grid-item .time').each(function(){
+         var t = $(this).text().split(':');
+         var minutesToAdd = parseInt(t[0])*60 + parseInt(t[1]);
+         var currentDate = new Date();
+         var futureDate = new Date(currentDate.getTime() + minutesToAdd*60000);
+         var m = futureDate.getMonth() + 1;//.toString().padStart(2, "0");
+         var sortieDate = futureDate.getDate().toString().padStart(2, "0")+'/'+m+'/'+futureDate.getFullYear()+' '+futureDate.getHours().toString().padStart(2, "0")+':'+futureDate.getMinutes().toString().padStart(2, "0");
+         $(this).after('<div style="color:#fff; font-size:10px;position:absolute; bottom:0;">'+sortieDate+'</div>');
+     })
+     $('div.grid-item').each(function(){
+         var farmInfo = $(this).find('.farm-info').text().trim().split(" ");
+         var tab = farmInfo[1].split("/");
+         var ph = (parseInt(tab[0])/parseInt(tab[1])).toFixed(2);
+         var pj = (parseInt(tab[0])/parseInt(tab[1])*24).toFixed(2);
+         tabPlant.push({le:tab[0], h:tab[1], ph:ph, pj:pj});
+         $('.farm-info',this).append('<span class="addInfo">'+ph+'/h '+pj+'/j</span>');
+         $h += ((parseFloat(ph)/letopvu)*parseInt(price));
+
+         console.log($h);
+     });
+     var gainTaxe = ((le/letopvu)*price)*5/100;
+     $('.infofts').html('<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwKSI+CjxwYXRoIGQ9Ik0xOC42OTg5IDguNTIwNTdDMTguNjA4MiA4LjMwMTYyIDE4LjM5NDUgOC4xNTg4NSAxOC4xNTc2IDguMTU4ODVIMTEuOTM2OUwxMy4wODgyIDAuNjc1MDZDMTMuMTI2OCAwLjQyNDYzIDEzIDAuMTc3ODMzIDEyLjc3NCAwLjA2MzMwMTdDMTIuNTQ3OSAtMC4wNTEyNjg2IDEyLjI3MzkgLTAuMDA3NDc5NTYgMTIuMDk0OCAwLjE3MTY2MUwxLjQyNTU0IDEwLjg0MDlDMS4yNTc5NiAxMS4wMDg1IDEuMjA3ODQgMTEuMjYwNSAxLjI5ODUxIDExLjQ3OTRDMS4zODkyMSAxMS42OTg0IDEuNjAyODggMTEuODQxMiAxLjgzOTg0IDExLjg0MTJIOC4wNjA0Nkw2LjkwOTEzIDE5LjMyNDlDNi44NzA2MiAxOS41NzU0IDYuOTk3NDEgMTkuODIyMiA3LjIyMzM5IDE5LjkzNjdDNy40NDk0NSAyMC4wNTEzIDcuNzIzNDMgMjAuMDA3NSA3LjkwMjU3IDE5LjgyODNMMTguNTcxOCA5LjE1OTEyQzE4LjczOTQgOC45OTE1MSAxOC43ODk2IDguNzM5NTEgMTguNjk4OSA4LjUyMDU3WiIgZmlsbD0iIzQ2N0ZGRiIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwIj4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo=" class="pictofts">'+$h.toFixed(2)+' $/h '+($h*24).toFixed(2)+' $/j<br><img src="/_nuxt/img/pvu-icon.fa9e648.svg" class="pictofts">'+(le/letopvu).toFixed(2)+'PVU > '+(((le/letopvu)*price)-gainTaxe).toFixed(2)+'$');
+     var pvu = $('.farmed-text').text().trim();
+     $('.farmed-text').append('<span style="display:block;font-size:12px;position:absolute;bottom:-8px;font-weight:400;">'+(parseInt(pvu)*price).toFixed(2)+'€</span>');
+ };
+});
