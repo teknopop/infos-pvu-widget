@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Time PVU
 // @namespace    http://tampermonkey.net/
-// @version      0.23
+// @version      0.231
 // @description  try to take over the world!
 // @author       Fantomas
 // @match        https://marketplace.plantvsundead.com/*
@@ -29,7 +29,7 @@ var price; var etat = false, etatElm = false;
         $.each( data, function( key, val ) {
             if (key == "plant-vs-undead-token") {
                 price = val.usd;
-                $('.price').text(price+'$');
+                $('.price').text(price.toFixed(2)+'$');
             }
         });
     });
