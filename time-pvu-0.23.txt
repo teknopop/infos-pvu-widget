@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Time PVU
 // @namespace    http://tampermonkey.net/
-// @version      0.231
+// @version      0.232
 // @description  try to take over the world!
 // @author       Fantomas
 // @match        https://marketplace.plantvsundead.com/*
@@ -18,7 +18,7 @@ GM_addStyle ('.boxfts {background-color: rgba(253, 194, 91,1); border-color: #4a
 GM_addStyle ('.pictofts{display: inline-block;width: 0.8rem;padding-right: 2px;position: relative;top:-1px;}');
 
 /*******A MODIFIER*********/
-var letopvu = 665; // +10% tous les vendredi à 2h
+var letopvu = 731; // +10% tous les vendredi à 2h
 /**************************/
 var price; var etat = false, etatElm = false;
 (function() {
