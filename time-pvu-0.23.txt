@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Time PVU
 // @namespace    http://tampermonkey.net/
-// @version      0.232
+// @version      0.233
 // @description  try to take over the world!
 // @author       Fantomas
 // @match        https://marketplace.plantvsundead.com/*
@@ -67,8 +67,7 @@ $(window).load(function(){console.log("loaded")
          var pj = (parseInt(tab[0])/parseInt(tab[1])*24).toFixed(2);
          tabPlant.push({le:tab[0], h:tab[1], ph:ph, pj:pj});
          $('.farm-info',this).append('<span class="addInfo">'+ph+'/h '+pj+'/j</span>');
-         $h += ((parseFloat(ph)/letopvu)*parseInt(price));
-
+         $h += ((parseFloat(ph)/letopvu)*price);
          console.log($h);
      });
      var gainTaxe = ((le/letopvu)*price)*5/100;
