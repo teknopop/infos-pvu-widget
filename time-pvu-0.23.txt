@@ -18,7 +18,7 @@ GM_addStyle ('.boxfts {background-color: rgba(253, 194, 91,1); border-color: #4a
 GM_addStyle ('.pictofts{display: inline-block;width: 0.8rem;padding-right: 2px;position: relative;top:-1px;}');
 
 /*******A MODIFIER*********/
-var letopvu = 731; // +10% tous les vendredi à 2h
+var letopvu = 884; // +10% tous les vendredi à 2h
 /**************************/
 var price; var etat = false, etatElm = false;
 (function() {
